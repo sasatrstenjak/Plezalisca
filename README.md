@@ -1,1 +1,3 @@
 # Plezališča
+
+![Screenshot](erdiagram.png)
