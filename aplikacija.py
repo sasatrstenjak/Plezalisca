@@ -33,16 +33,16 @@ def password_md5(s):
 def vrni_plezalisca():
     """Seznam plezalisc"""
     
-    cur.execute("SELECT ime,drzava,st_smeri,razpon_ocen FROM plezalisca")
+    cur.execute("SELECT ime,st_smeri,razpon_ocen,drzava FROM plezalisca")
     
-    return template('plezalisca.html', plezalisce=cur)
+    return template('plezalisca.html', plezalisca=cur)
 
 
 @get("/drzave/")
 def vrni_drzave():
     """Seznam po drzavah"""
     
-    cur.execute("SELECT drzava,plezalisce FROM regije")
+    cur.execute("SELECT DISTINCT drzava FROM regije")
     
     return template('drzave.html', drzave=cur)
 
@@ -54,6 +54,18 @@ def vrni_smeri():
     
     return template('smeri.html', smeri=cur)
 
+
+@get('/drzave/:drz')
+def po_drzavi(drz):
+    cur.execute("SELECT ime,st_smeri,razpon_ocen,drzava FROM plezalisca WHERE drzava = %s", [drz])
+
+    return template("plezalisca.html", plezalisca=cur)
+
+@get('/plezalisca/:pl')
+def po_plezaliscu(pl):
+    cur.execute("SELECT ime,ocena,dolzina FROM smeri WHERE plezalisce = %s", [pl])
+
+    return template("smeri_pl.html", smeri=cur)
 
 @get("/")
 def main():

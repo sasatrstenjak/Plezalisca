@@ -1,14 +1,11 @@
 %rebase('osnova.html', naslov='Države')
 
    <table cellpadding="0" cellspacing="0" border="1">
-   <tr>
-      <th>Plezališče</th>
-      <th>Država</th>
-   </tr>
-   %for (drzava,plezalisce) in drzave:
-     <tr>
-        <td>{{drzava}}</td>
-        <td>{{plezalisce}}</td>
-     </tr>
+
+   %for drzava in drzave:
+   %drzava = drzava[0]
+    <tr>
+      <li><a href="/drzave/{{drzava}}">{{drzava}}</a></li>
+    </tr>
    %end
    </table>

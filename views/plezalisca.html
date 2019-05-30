@@ -3,14 +3,12 @@
    <table cellpadding="0" cellspacing="0" border="1">
    <tr>
       <th>Plezališče</th>
-      <th>Država</th>
       <th>Število smeri</th>
       <th>Razpon težavnosti</th>
    </tr>
-   %for (ime,drzava,st_smeri,razpon_t) in plezalisce:
+   %for (ime,st_smeri,razpon_t,drzava) in plezalisca:
      <tr>
-        <td>{{ime}}</td>
-        <td>{{drzava}}</td>
+        <td><a href="/plezalisca/{{ime}}">{{ime}}</a></td>
         <td>{{st_smeri}}</td>
         <td>{{razpon_t}}</td>
      </tr>
