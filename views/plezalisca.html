@@ -1,0 +1,18 @@
+%rebase('osnova.html', naslov='Plezališča')
+
+   <table cellpadding="0" cellspacing="0" border="1">
+   <tr>
+      <th>Plezališče</th>
+      <th>Država</th>
+      <th>Število smeri</th>
+      <th>Razpon težavnosti</th>
+   </tr>
+   %for (ime,drzava,st_smeri,razpon_t) in plezalisce:
+     <tr>
+        <td>{{ime}}</td>
+        <td>{{drzava}}</td>
+        <td>{{st_smeri}}</td>
+        <td>{{razpon_t}}</td>
+     </tr>
+   %end
+   </table>
