@@ -29,6 +29,84 @@ def password_md5(s):
     h.update(s.encode('utf-8'))
     return h.hexdigest()
 
+def get_user():
+    """Poglej cookie in ugotovi, kdo je prijavljeni uporabnik,
+       vrni njegov username in ime. Če ni prijavljen, presumeri
+       na stran za prijavo ali vrni None (advisno od auto_login).
+    """
+    # Dobimo username iz piškotka
+    username = request.get_cookie('username', secret=secret)
+    # Preverimo, ali ta uporabnik obstaja
+    if username is not None:
+        cur.execute("SELECT username FROM uporabnik WHERE username=%s", [username])
+        r = cur.fetchone()
+        if r is not None:
+            # uporabnik obstaja, vrnemo njegove podatke
+            return username
+    # Če pridemo do sem, uporabnik ni prijavljen, naredimo redirect
+    else:
+        return None
+
+@get("/login/")
+def login_get():
+    """Serviraj formo za login."""
+    return template("login.html",
+                           napaka=None,
+                           username=None)
+
+@post("/login/")
+def login_post():
+    """Obdelaj izpolnjeno formo za prijavo"""
+    # Uporabniško ime, ki ga je uporabnik vpisal v formo
+    username = request.forms.username
+    # Izračunamo MD5 has gesla, ki ga bomo spravili
+    password = password_md5(request.forms.password)
+    # Preverimo, ali se je uporabnik pravilno prijavil
+    c = conn.cursor()
+    c.execute("SELECT * FROM uporabnik WHERE username=%s AND geslo=%s",
+              [username, password])
+    if c.fetchone() is None:
+        # Username in geslo se ne ujemata
+        return template("login.html", napaka='Uporabnik ne obstaja.', username=username)
+    else:
+        # Vse je v redu, nastavimo cookie in preusmerimo na glavno stran
+        response.set_cookie('username', username, path='/', secret=secret)
+        redirect("/")
+
+@get("/logout/")
+def logout():
+    """Pobriši cookie in preusmeri na login."""
+    response.delete_cookie('username')
+    redirect('/login/')
+
+@get("/register/")
+def register_get():
+    """Prikaži formo za registracijo."""
+    return template("register.html", ime=None, priimek=None, username = None, geslo = None, napaka = None)
+
+
+@post("/register/")
+def register_post():
+    """Registriraj novega uporabnika."""
+    ime = request.forms.ime
+    priimek = request.forms.priimek
+    username = request.forms.username
+    geslo = request.forms.geslo
+    # Ali uporabnik že obstaja?
+    c = conn.cursor()
+    c.execute("SELECT * FROM uporabnik WHERE username=%s", [username])
+    if c.fetchone():
+        # Uporabnik že obstaja
+        return template("register.html", ime=ime, priimek=priimek, username=None, napaka='To uporabniško ime je zasedeno.')
+    else:
+        # Vse je v redu, vstavi novega uporabnika v bazo
+        password = password_md5(geslo)
+        c.execute("INSERT INTO uporabnik (ime, priimek, username, geslo) VALUES (%s, %s, %s, %s)",
+                  (ime, priimek, username, password))
+        # Daj uporabniku cookie
+        response.set_cookie('username', username, path='/', secret=secret)
+        redirect("/")
+    
 @get("/plezalisca/")
 def vrni_plezalisca():
     """Seznam plezalisc"""
@@ -70,8 +148,9 @@ def po_plezaliscu(pl):
 @get("/")
 def main():
     """Začetna stran"""
+    username = get_user()
 
-    return template("zacetna.html")
+    return template("zacetna.html", username = username,)
 
 
 

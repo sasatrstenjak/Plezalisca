@@ -1,18 +1,25 @@
 %rebase('osnova.html', naslov='Smeri')
-
-   <table cellpadding="0" cellspacing="0" border="1">
-   <tr>
-      <th>Smer</th>
-      <th>Plezališče</th>
-      <th>Težavnost</th>
-      <th>Dolžina</th>
-   </tr>
-   %for (smer,plezalisce,tezavnost,dolzina) in smeri:
-     <tr>
-        <td>{{smer}}</td>
-        <td>{{plezalisce}}</td>
-        <td>{{tezavnost}}</td>
-        <td>{{dolzina}}</td>
-     </tr>
-   %end
+<h1>Smeri</h1>
+<body>
+   <table class="table table-bordered">
+	   <thead class="thead-light">
+		   <tr>
+		       <th>Smer</th>
+		       <th>Plezališče</th>
+		       <th>Težavnost</th>
+		       <th>Dolžina</th>
+		   </tr>
+		</thead>
+		
+		<tbody>
+	     %for (smer,plezalisce,tezavnost,dolzina) in smeri:
+	       <tr>
+	          <td>{{smer}}</td>
+	          <td>{{plezalisce}}</td>
+	          <td>{{tezavnost}}</td>
+	          <td>{{dolzina}}</td>
+	       </tr>
+	     %end
+		</tbody>
    </table>
+</body>

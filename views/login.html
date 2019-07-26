@@ -1,0 +1,36 @@
+%rebase('osnova.html', naslov='Prijava')
+<style>
+	body {background: url("https://mdbootstrap.com/img/Photos/Horizontal/Nature/full page/img(11).jpg") no-repeat center center fixed;
+	background-position: center;
+	  background-repeat: no-repeat;
+	  background-size: cover;}
+	head {background-color: white;}
+ 
+</style>
+<form class="form-signin" method="post">
+<div style = "background:white !important"class="jumbotron text-center">
+  <h1 class="display-4">Plezanje</h1>
+
+</div>
+
+<div class="container">
+  <label for="inputUsername">Uporabniško ime:</label>
+  <input type="username" id="inputUsername" class="form-control" placeholder="Uporabniško ime" name="username" required autofocus>
+</div>
+<div class="container">
+  <label for="inputPassword">Geslo:</label>
+  <input type="password" id="inputPassword" class="form-control" placeholder="Geslo" name="password" required>
+</div>
+
+%if napaka:
+<div class="container">
+        <div class="alert alert-warning">{{napaka}}</div>
+		</div>
+  %end
+
+
+<div style = "padding-left: ($spacer * .5) !important" class="container">
+<button  class="  btn btn-info" type="submit">Prijava</button>
+
+</div>
+</form>
