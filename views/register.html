@@ -1,0 +1,48 @@
+%rebase('osnova.html', naslov='Registracija')
+<style>
+	body {background: url("https://mdbootstrap.com/img/Photos/Horizontal/Nature/full page/img(11).jpg") no-repeat center center fixed;
+	background-position: center;
+	  background-repeat: no-repeat;
+	  background-size: cover;}
+	head {background-color: white;}
+ 
+</style>
+<form class="form-signin" method="post">
+<div style = "background:white !important"class="jumbotron text-center">
+  <h1 class="display-4">Plezanje</h1>
+
+</div>
+<div class="container">
+  <label for="inputUsername">Ime</label>
+  <input type="text" id="inputIme" class="form-control" placeholder="Ime" name="ime" required autofocus>
+</div>
+<div class="container">
+  <label for="inputUsername">Priimek</label>
+  <input type="text" id="inputPriimek" class="form-control" placeholder="Priimek" name="priimek" required autofocus>
+</div>
+<div class="container">
+  <label for="inputUsername">Uporabniško ime:</label>
+  <input type="username" id="inputUsername" class="form-control" placeholder="Uporabniško ime" name="username" required autofocus>
+</div>
+<div class="container">
+  <label for="inputPassword">Geslo:</label>
+  <input type="password" id="inputPassword" class="form-control" placeholder="Geslo" name="password" required>
+</div>
+
+
+<div class="container">
+	<h1> </h1>
+</div>
+
+%if napaka:
+<div class="container">
+	<div class="alert alert-info">{{napaka}}</div>
+</div>
+%end
+
+
+<div class="container">
+<button  class="  btn btn-info" type="submit">Registracija</button>
+
+</div>
+</form>

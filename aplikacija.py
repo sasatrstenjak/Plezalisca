@@ -38,6 +38,7 @@ def get_user():
     username = request.get_cookie('username', secret=secret)
     # Preverimo, ali ta uporabnik obstaja
     if username is not None:
+        
         cur.execute("SELECT username FROM uporabnik WHERE username=%s", [username])
         r = cur.fetchone()
         if r is not None:
@@ -61,11 +62,13 @@ def login_post():
     username = request.forms.username
     # Izračunamo MD5 has gesla, ki ga bomo spravili
     password = password_md5(request.forms.password)
+    print(password)
     # Preverimo, ali se je uporabnik pravilno prijavil
-    c = conn.cursor()
-    c.execute("SELECT * FROM uporabnik WHERE username=%s AND geslo=%s",
+    
+    cur.execute("SELECT * FROM uporabnik WHERE username=%s AND geslo=%s",
               [username, password])
-    if c.fetchone() is None:
+    if cur.fetchone() is None:
+        print (cur.fetchone())
         # Username in geslo se ne ujemata
         return template("login.html", napaka='Uporabnik ne obstaja.', username=username)
     else:
@@ -91,7 +94,7 @@ def register_post():
     ime = request.forms.ime
     priimek = request.forms.priimek
     username = request.forms.username
-    geslo = request.forms.geslo
+    geslo = request.forms.password
     # Ali uporabnik že obstaja?
     c = conn.cursor()
     c.execute("SELECT * FROM uporabnik WHERE username=%s", [username])
@@ -100,12 +103,15 @@ def register_post():
         return template("register.html", ime=ime, priimek=priimek, username=None, napaka='To uporabniško ime je zasedeno.')
     else:
         # Vse je v redu, vstavi novega uporabnika v bazo
-        password = password_md5(geslo)
+        print(geslo)
+        
+        password = password_md5(None)
+        print(password)
         c.execute("INSERT INTO uporabnik (ime, priimek, username, geslo) VALUES (%s, %s, %s, %s)",
                   (ime, priimek, username, password))
         # Daj uporabniku cookie
         response.set_cookie('username', username, path='/', secret=secret)
-        redirect("/")
+        return template("register.html", ime=None, priimek=None, username=None, napaka='Registracija uspešna.')
     
 @get("/plezalisca/")
 def vrni_plezalisca():
