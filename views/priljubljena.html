@@ -1,0 +1,22 @@
+%rebase('osnova.html', naslov='Plezališča')
+
+<h1>Plezališča</h1>
+<body>
+    <table class="table table-bordered table-hover">
+	   <thead class="thead-light">
+		   <tr>
+		       <th>Plezališče</th>
+		       <th>Komentar</th>
+		   </tr>
+		</thead>
+		
+		<tbody>
+	     %for (ime,st_smeri,razpon_t,drzava) in plezalisca:
+	       <tr>
+	          <td><a href="/plezalisca/{{ime}}">{{ime}}</a></td>
+	          <td>{{st_smeri}}</td>
+	       </tr>
+	     %end
+		</tbody>
+   </table>
+</body>
