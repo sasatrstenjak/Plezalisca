@@ -14,16 +14,31 @@
 <header>
 <nav style = "background:white !important"class="navbar navbar-default">
   <div class="container-fluid">
+	  
+
+	%if username:
     <div class="navbar-header">
       <a class="navbar-brand" href="/">Domov</a>
 	</div>
+	
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/priljubljena/">Priljubljena</a>
+	</div>
+	
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/logout/">Odjava</a>
+	</div>
+    
+	%else:
     <div class="navbar-header">
       <a class="navbar-brand" href="/login/">Prijava</a>
 	</div>
+	
     <div class="navbar-header">
       <a class="navbar-brand" href="/register/">Registracija</a>
 	</div>
 	  </div>
+	%end
 		  
 </nav> 		
 </header>

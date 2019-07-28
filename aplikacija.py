@@ -19,6 +19,7 @@ secret = "to skrivnost je zelo tezko uganiti 1094107c907cw982982c42"
 # odkomentiraj, če želiš sporočila o napakah
 debug(True)
 
+
 ######################################################################
 # Pomožne funkcije
 
@@ -64,13 +65,15 @@ def login_post():
     password = password_md5(request.forms.password)
     print(password)
     # Preverimo, ali se je uporabnik pravilno prijavil
-    
     cur.execute("SELECT * FROM uporabnik WHERE username=%s AND geslo=%s",
-              [username, password])
+             [username, password])
+    print(username)
+    
     if cur.fetchone() is None:
-        print (cur.fetchone())
+        #print (cur.fetchone())
         # Username in geslo se ne ujemata
-        return template("login.html", napaka='Uporabnik ne obstaja.', username=username)
+        username = None
+        return template("login.html", napaka='Napačno geslo ali uporabniško ime.', username=username)
     else:
         # Vse je v redu, nastavimo cookie in preusmerimo na glavno stran
         response.set_cookie('username', username, path='/', secret=secret)
@@ -103,10 +106,9 @@ def register_post():
         return template("register.html", ime=ime, priimek=priimek, username=None, napaka='To uporabniško ime je zasedeno.')
     else:
         # Vse je v redu, vstavi novega uporabnika v bazo
-        print(geslo)
         
-        password = password_md5(None)
-        print(password)
+        password = password_md5(geslo)
+        
         c.execute("INSERT INTO uporabnik (ime, priimek, username, geslo) VALUES (%s, %s, %s, %s)",
                   (ime, priimek, username, password))
         # Daj uporabniku cookie
@@ -116,49 +118,97 @@ def register_post():
 @get("/plezalisca/")
 def vrni_plezalisca():
     """Seznam plezalisc"""
-    
+    username = get_user()
+    #if str(search) == "":
     cur.execute("SELECT ime,st_smeri,razpon_ocen,drzava FROM plezalisca")
+    #else:
+ #       cur.execute("SELECT ime,st_smeri,razpon_ocen,drzava FROM plezalisca WHERE drzava = %s", [str(search)])
+        
     
-    return template('plezalisca.html', plezalisca=cur)
+    return template('plezalisca.html', plezalisca=cur, username=username)
+
+@post("/plezalisca/")
+def plezalisca_post():
+    search = request.forms.search
+    username = get_user()
+    print("search: " + search)
+    if search == "":
+        cur.execute("SELECT ime,st_smeri,razpon_ocen,drzava FROM plezalisca")
+    else:
+        cur.execute("SELECT ime,st_smeri,razpon_ocen,drzava FROM plezalisca WHERE ime = %s", [search])
+        
+    return template('plezalisca.html', plezalisca=cur, username=username)
 
 
+        
 @get("/drzave/")
 def vrni_drzave():
     """Seznam po drzavah"""
     
+    username = get_user()
     cur.execute("SELECT DISTINCT drzava FROM regije")
     
-    return template('drzave.html', drzave=cur)
+    return template('drzave.html', drzave=cur, username=username)
 
 @get("/smeri/")
 def vrni_smeri():
     """Seznam vseh smeri"""
     
+    username = get_user()
     cur.execute("SELECT ime,plezalisce,ocena,dolzina FROM smeri")
     
-    return template('smeri.html', smeri=cur)
+    return template('smeri.html', smeri=cur, username=username)
 
+
+@get("/priljubljena/")
+def vrni_priljubljena():
+    """Seznam priljubljenih plezališč"""
+    
+    username = get_user()
+    cur.execute("SELECT ime FROM priljubljena WHERE uporabnik = %s", [str(username)])
+    
+    return template('priljubljena.html', priljubljena=cur, username=username)
+
+@get("/priljubljena/:plez")
+def priljubljena_get(plez):
+
+    username = get_user()
+    komentar = "koko"
+
+    cur.execute("INSERT INTO priljubljena (uporabnik, ime, komentar) VALUES (%s, %s, %s)", [str(username), plez, komentar])
+
+    redirect("/priljubljena/")
+    
+    
 
 @get('/drzave/:drz')
 def po_drzavi(drz):
+    username = get_user()
     cur.execute("SELECT ime,st_smeri,razpon_ocen,drzava FROM plezalisca WHERE drzava = %s", [drz])
 
-    return template("plezalisca.html", plezalisca=cur)
+    return template("plezalisca.html", plezalisca=cur, username=username)
 
 @get('/plezalisca/:pl')
 def po_plezaliscu(pl):
+    username = get_user()
     cur.execute("SELECT ime,ocena,dolzina FROM smeri WHERE plezalisce = %s", [pl])
 
-    return template("smeri_pl.html", smeri=cur)
+    return template("smeri_pl.html", smeri=cur, username=username)
 
 @get("/")
 def main():
     """Začetna stran"""
     username = get_user()
+    return template("zacetna.html", username=username)
 
-    return template("zacetna.html", username = username,)
 
-
+#Moznosti razvrscanja:
+moznosti = [('Države po abecedi'),
+            ('Ocena naraščajoče'),
+            ('Ocena padajoče'),
+            ('Število smeri naraščajoče'),
+            ('Število smeri padajoče')]
+             
 
 
 ######################################################################
