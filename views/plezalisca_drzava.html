@@ -1,5 +1,5 @@
-%rebase('osnova.html', naslov='Plezališča')
-<h1>Plezališča</h1>
+%rebase('osnova.html', naslov='Plezališča v državi')
+<h1>Plezališča: {{drzava}}</h1>
 <body>
 	
 	<form class="form-inline" method="post">
@@ -16,7 +16,6 @@
 		       <th>Plezališče</th>
 		       <th>Število smeri</th>
 		       <th>Razpon težavnosti</th>
-			   <th>Država</th>
 			   <th>Dodaj med priljubljene</th>
 		   </tr>
 		</thead>
@@ -27,7 +26,6 @@
 	          <td><a href="/plezalisca/{{ime}}">{{ime}}</a></td>
 	          <td>{{st_smeri}}</td>
 	          <td>{{razpon_t}}</td>
-			  <td><a href="/drzave/{{drzava}}">{{drzava}}</a></td>
 			  <td><a href="/priljubljena/{{ime}}">Dodaj med priljubljene</a></td>
 	       </tr>
 	     %end

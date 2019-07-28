@@ -116,22 +116,17 @@ def register_post():
         return template("register.html", ime=None, priimek=None, username=None, napaka='Registracija uspešna.')
     
 @get("/plezalisca/")
-def vrni_plezalisca():
+def plezalisca_get():
     """Seznam plezalisc"""
     username = get_user()
-    #if str(search) == "":
-    cur.execute("SELECT ime,st_smeri,razpon_ocen,drzava FROM plezalisca")
-    #else:
- #       cur.execute("SELECT ime,st_smeri,razpon_ocen,drzava FROM plezalisca WHERE drzava = %s", [str(search)])
-        
-    
+    cur.execute("SELECT ime,st_smeri,razpon_ocen,drzava FROM plezalisca")    
     return template('plezalisca.html', plezalisca=cur, username=username)
 
 @post("/plezalisca/")
 def plezalisca_post():
     search = request.forms.search
     username = get_user()
-    print("search: " + search)
+
     if search == "":
         cur.execute("SELECT ime,st_smeri,razpon_ocen,drzava FROM plezalisca")
     else:
@@ -139,8 +134,6 @@ def plezalisca_post():
         
     return template('plezalisca.html', plezalisca=cur, username=username)
 
-
-        
 @get("/drzave/")
 def vrni_drzave():
     """Seznam po drzavah"""
@@ -149,6 +142,7 @@ def vrni_drzave():
     cur.execute("SELECT DISTINCT drzava FROM regije")
     
     return template('drzave.html', drzave=cur, username=username)
+
 
 @get("/smeri/")
 def vrni_smeri():
@@ -178,15 +172,15 @@ def priljubljena_get(plez):
     cur.execute("INSERT INTO priljubljena (uporabnik, ime, komentar) VALUES (%s, %s, %s)", [str(username), plez, komentar])
 
     redirect("/priljubljena/")
-    
+   
     
 
 @get('/drzave/:drz')
 def po_drzavi(drz):
     username = get_user()
     cur.execute("SELECT ime,st_smeri,razpon_ocen,drzava FROM plezalisca WHERE drzava = %s", [drz])
-
-    return template("plezalisca.html", plezalisca=cur, username=username)
+    drzava = drz
+    return template("plezalisca_drzava.html", plezalisca=cur, username=username, drzava = drzava)
 
 @get('/plezalisca/:pl')
 def po_plezaliscu(pl):
