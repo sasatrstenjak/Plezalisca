@@ -145,12 +145,24 @@ def vrni_drzave():
 
 
 @get("/smeri/")
-def vrni_smeri():
+def smeri_get():
     """Seznam vseh smeri"""
     
     username = get_user()
     cur.execute("SELECT ime,plezalisce,ocena,dolzina FROM smeri")
     
+    return template('smeri.html', smeri=cur, username=username)
+
+@post("/smeri/")
+def smeri_post():
+    search = request.forms.search
+    username = get_user()
+
+    if search == "":
+        cur.execute("SELECT ime,st_smeri,razpon_ocen,drzava FROM plezalisca")
+    else:
+        cur.execute("SELECT ime,st_smeri,razpon_ocen,drzava FROM plezalisca WHERE ime = %s", [search])
+        
     return template('smeri.html', smeri=cur, username=username)
 
 
