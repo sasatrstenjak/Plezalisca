@@ -24,4 +24,22 @@ CREATE TABLE regije (
   plezalisce text NOT NULL,
   regija text,
   drzava text NOT NULL
-)
+);
+
+CREATE TABLE uporabnik(
+	id serial PRIMARY KEY,
+	ime text NOT NULL,
+	priimek text NOT NULL,
+	username text NOT NULL,
+	geslo text NOT NULL	
+);
+
+ALTER TABLE uporabnik ADD UNIQUE (username);
+
+CREATE TABLE priljubljena(
+	id serial PRIMARY KEY,
+	uporabnik text,
+	ime text,
+	komentar text);
+	
+

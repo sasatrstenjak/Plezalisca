@@ -135,7 +135,7 @@ def plezalisca_post():
     return template('plezalisca.html', plezalisca=cur, username=username)
 
 @get("/drzave/")
-def vrni_drzave():
+def drzave_get():
     """Seznam po drzavah"""
     
     username = get_user()
@@ -159,9 +159,9 @@ def smeri_post():
     username = get_user()
 
     if search == "":
-        cur.execute("SELECT ime,st_smeri,razpon_ocen,drzava FROM plezalisca")
+        cur.execute("SELECT ime,plezalisce,ocena,dolzina FROM smeri")
     else:
-        cur.execute("SELECT ime,st_smeri,razpon_ocen,drzava FROM plezalisca WHERE ime = %s", [search])
+        cur.execute("SELECT ime,plezalisce,ocena,dolzina FROM smeri WHERE ime = %s", [search])
         
     return template('smeri.html', smeri=cur, username=username)
 
@@ -182,10 +182,8 @@ def priljubljena_get(plez):
     komentar = "koko"
 
     cur.execute("INSERT INTO priljubljena (uporabnik, ime, komentar) VALUES (%s, %s, %s)", [str(username), plez, komentar])
-
     redirect("/priljubljena/")
-   
-    
+
 
 @get('/drzave/:drz')
 def po_drzavi(drz):
@@ -208,12 +206,6 @@ def main():
     return template("zacetna.html", username=username)
 
 
-#Moznosti razvrscanja:
-moznosti = [('Države po abecedi'),
-            ('Ocena naraščajoče'),
-            ('Ocena padajoče'),
-            ('Število smeri naraščajoče'),
-            ('Število smeri padajoče')]
              
 
 
